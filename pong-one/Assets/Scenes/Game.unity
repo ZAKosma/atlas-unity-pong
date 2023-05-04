@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 177867923}
   - component: {fileID: 177867922}
   m_Layer: 0
-  m_Name: Middle_Line
+  m_Name: MidLine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -219,7 +219,7 @@ GameObject:
   - component: {fileID: 264740088}
   - component: {fileID: 264740090}
   m_Layer: 0
-  m_Name: Right_Goal
+  m_Name: RightGoal
   m_TagString: Goal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -569,7 +569,7 @@ GameObject:
   - component: {fileID: 1310898916}
   - component: {fileID: 1310898918}
   m_Layer: 0
-  m_Name: Left_Goal
+  m_Name: LeftGoal
   m_TagString: Goal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
