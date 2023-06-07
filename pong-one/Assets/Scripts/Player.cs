@@ -6,6 +6,10 @@ using UnityEngine;
 [RequireComponent(typeof(Paddle))]
 public class Player : MonoBehaviour
 {
+
+    public KeyCode upKey;
+    public KeyCode downKey;
+    
     public float speed = 5f;
 
     private Paddle thisPaddle;
@@ -17,7 +21,16 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        float verticalInput = Input.GetAxis("Vertical");
+        float verticalInput = 0;
+        if (Input.GetKey(upKey))
+        {
+            verticalInput = 1;
+        }
+        else if (Input.GetKey(downKey))
+        {
+            verticalInput = -1;
+        }
+        
         thisPaddle.Move(verticalInput * speed * Time.deltaTime);
     }
 }
