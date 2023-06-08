@@ -7,10 +7,10 @@ public class GameManager : MonoBehaviour
 {
     //Game variables
     [SerializeField] private float startDelay = 3f;
-    private int leftScore = 0;
-    private int rightScore = 0;
-    [SerializeField]
-    private int scoreToWin = 11;
+    // private int leftScore = 0;
+    // private int rightScore = 0;
+    // [SerializeField]
+    // private int scoreToWin = 11;
     
     //Set Up variables
     [SerializeField]
@@ -35,8 +35,8 @@ public class GameManager : MonoBehaviour
 
     void SetGame()
     {
-        leftScore = 0;
-        rightScore = 0;
+        // leftScore = 0;
+        // rightScore = 0;
         
         activeBall = Instantiate(ballPrefab, Vector3.zero, this.transform.rotation).GetComponent<Ball>();
         activeBall.SetBallActive(false);

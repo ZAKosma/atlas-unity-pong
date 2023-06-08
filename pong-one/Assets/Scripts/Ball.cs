@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class Ball : MonoBehaviour
 {
@@ -24,7 +25,6 @@ public class Ball : MonoBehaviour
         {
             return;
         }
-        
         Vector2 newPosition = new Vector2(transform.position.x, transform.position.y) + (direction * speed * Time.deltaTime);
         
         transform.position = newPosition;
@@ -38,32 +38,7 @@ public class Ball : MonoBehaviour
         {
             direction.y *= -1f;
         }
-
-        /*bool groundedPlayer = true;
-        Vector3 playerVelocity = Vector3.zero;
-        float jumpHeight = 1f;
-        float jumpModifier = 1f;
-        float gravityValue = -9.81f;
-        
-        if (Input.GetButtonDown("Jump") && groundedPlayer)
-        {
-            isJumping = true;
-            playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue); 
-        }
-        else if (Input.GetButton("Jump") && isJumping)
-        {
-            playerVelocity.y += jumpHeight * jumpModifier;
-        }*/
     }
-
-    
-    /*bool isJumping = false;
-    
-    IEnumerator JumpTimer()
-    {
-        yield return new WaitForSeconds(1);
-        isJumping = false;
-    }*/
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -76,12 +51,12 @@ public class Ball : MonoBehaviour
             //Left goal
             if (this.gameObject.transform.position.x < -1)
             {
-                
+                ScoreManager.Instance.ScorePointPlayer2();
             }
             //Right goal
             else
             {
-                
+                ScoreManager.Instance.ScorePointPlayer1();
             }
         }
     }
