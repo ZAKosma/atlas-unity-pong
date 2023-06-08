@@ -1008,8 +1008,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2304f11a87d95794491c8fb672313405, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  upKey: 270
-  downKey: 282
+  upKey: 119
+  downKey: 115
   speed: 5
 --- !u!1 &1521815777
 GameObject:
