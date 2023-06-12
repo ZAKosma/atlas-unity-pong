@@ -8,14 +8,24 @@ public class Paddle : MonoBehaviour
     public bool isLeftPaddle = true;
     
     private float halfPlayerHeight;
-    private float screenTop = 4.5f;
-    private float screenBottom = -4.5f;
+    private float screenTop = 527;
+    private float screenBottom = -527;
 
     private float bounceDirection = 1f;
+    
+    private RectTransform rectTransform;
+
 
     private void Start()
     {
-        halfPlayerHeight = transform.localScale.y / 2f;
+        rectTransform = GetComponent<RectTransform>();
+
+        halfPlayerHeight = rectTransform.sizeDelta.y / 2f;
+
+        var height = UIScaler.Instance.GetUIHeight();
+
+        screenTop = height / 2;
+        screenBottom = -1 * height / 2;
 
         if (isLeftPaddle)
         {
@@ -30,19 +40,20 @@ public class Paddle : MonoBehaviour
     public void Move(float movement)
     {
         //Set temporary variable
-        Vector2 newPosition = transform.position;
+        Vector2 newPosition = rectTransform.anchoredPosition;
         
         //Manipulate the temporary variable
         newPosition.y += movement;
         newPosition.y = Mathf.Clamp(newPosition.y, screenBottom + halfPlayerHeight, screenTop - halfPlayerHeight);
         
         //Apply temporary variable back to original component
-        transform.position = newPosition;
+        rectTransform.anchoredPosition = newPosition;
     }
 
     public void Reflect(Ball ball)
     {
-        float y = BallHitPaddleWhere(ball.transform.position, transform.position, transform.localScale.y);
+        float y = BallHitPaddleWhere(ball.GetPosition(), rectTransform.anchoredPosition, rectTransform.sizeDelta.y / 2f);
+        //Debug.Log("X: " + bounceDirection + " Y: " + y);
         ball.Reflect(new Vector2(bounceDirection, y));
     }
 

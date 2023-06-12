@@ -7,15 +7,22 @@ public class Ball : MonoBehaviour
 {
     public float speed = 5f;
 
-    public float screenTop = 4.5f;
-    public float screenBottom = 4.5f;
+    private float screenTop = 527;
+    private float screenBottom = -527;
 
     private Vector2 direction;
 
     private bool ballActive;
+    
+    private RectTransform rectTransform;
+
 
     private void Start()
     {
+        rectTransform = GetComponent<RectTransform>();
+        
+        SetHeightBounds();
+
         direction = new Vector2(-1f, 0f);
     }
 
@@ -25,16 +32,11 @@ public class Ball : MonoBehaviour
         {
             return;
         }
-        Vector2 newPosition = new Vector2(transform.position.x, transform.position.y) + (direction * speed * Time.deltaTime);
-        
-        transform.position = newPosition;
-        
-        if (transform.position.x > 9f || transform.position.x < -9f)
-        {
-            direction.x *= -1f;
-        }
+        Vector2 newPosition = rectTransform.anchoredPosition + (direction * speed * Time.deltaTime);
 
-        if (transform.position.y > screenTop || transform.position.y < screenBottom)
+        rectTransform.anchoredPosition = newPosition;
+
+        if (rectTransform.anchoredPosition.y > screenTop || rectTransform.anchoredPosition.y < screenBottom)
         {
             direction.y *= -1f;
         }
@@ -49,7 +51,7 @@ public class Ball : MonoBehaviour
         else if (collision.gameObject.CompareTag("Goal"))
         {
             //Left goal
-            if (this.gameObject.transform.position.x < -1)
+            if (this.rectTransform.position.x < -1)
             {
                 ScoreManager.Instance.ScorePointPlayer2();
             }
@@ -63,11 +65,24 @@ public class Ball : MonoBehaviour
 
     public void Reflect(Vector2 newDirection)
     {
-        direction = newDirection.normalized;
+        direction = newDirection;
     }
 
     public void SetBallActive(bool value)
     {
         ballActive = value;
+    }
+
+    public Vector2 GetPosition()
+    {
+        return rectTransform.anchoredPosition;
+    }
+
+    public void SetHeightBounds()
+    {
+        var height = UIScaler.Instance.GetUIHeightPadded();
+
+        screenTop = height / 2;
+        screenBottom = -1 * height / 2;
     }
 }

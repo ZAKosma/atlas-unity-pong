@@ -16,10 +16,14 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject ballPrefab;
 
+    [SerializeField] private GameObject canvasParent;
+
     private Ball activeBall;
     
     //Singleton Pattern
     public static GameManager Instance { get; private set; }
+
+    private Goal[] goals;
 
     private void Awake()
     {
@@ -31,6 +35,8 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
         }
+
+        goals = new Goal[2];
     }
 
     void SetGame()
@@ -38,7 +44,8 @@ public class GameManager : MonoBehaviour
         // leftScore = 0;
         // rightScore = 0;
         
-        activeBall = Instantiate(ballPrefab, Vector3.zero, this.transform.rotation).GetComponent<Ball>();
+        activeBall = Instantiate(ballPrefab, Vector3.zero, this.transform.rotation, canvasParent.transform).GetComponent<Ball>();
+        activeBall.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
         activeBall.SetBallActive(false);
     }
 
@@ -57,6 +64,46 @@ public class GameManager : MonoBehaviour
     {
         SetGame();
         yield return new WaitForSeconds(startDelay);
+        
+        SetBounds();
+        
         StartGame();
+    }
+
+    void SetBounds()
+    {
+        
+        activeBall.SetHeightBounds();
+        foreach (var g in goals)
+        {
+            g.SetHeightBounds();
+        }
+    }
+
+    public void ResetBall()
+    {
+        //Debug.Log("Restting");
+        StartCoroutine(ResetBallCoroutine());
+    }    
+    private IEnumerator ResetBallCoroutine()
+    {
+        GameObject.Destroy(activeBall.gameObject);
+        
+        //wait till next frame for ball to destroy
+        yield return null;
+        
+        StartCoroutine(StartTimer());
+    }
+
+    public void SetGoalObj(Goal g)
+    {
+        if (goals[0])
+        {
+            goals[1] = g;
+        }
+        else
+        {
+            goals[0] = g;
+        }
     }
 }
