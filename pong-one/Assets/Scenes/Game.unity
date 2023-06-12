@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 6618661}
   - component: {fileID: 6618663}
   m_Layer: 5
-  m_Name: MidLine
+  m_Name: Mid Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
