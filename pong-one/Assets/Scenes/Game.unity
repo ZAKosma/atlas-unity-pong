@@ -490,7 +490,7 @@ GameObject:
   - component: {fileID: 561484960}
   - component: {fileID: 561484959}
   m_Layer: 5
-  m_Name: PlayerOne
+  m_Name: Player One
   m_TagString: Paddle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -739,7 +739,7 @@ GameObject:
   - component: {fileID: 899253993}
   - component: {fileID: 899253992}
   m_Layer: 5
-  m_Name: PlayerTwo
+  m_Name: Player Two
   m_TagString: Paddle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -905,7 +905,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 1
+  m_UiScaleMode: 0
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1920, y: 1080}
@@ -1094,7 +1094,7 @@ GameObject:
   - component: {fileID: 1521815780}
   - component: {fileID: 1521815779}
   m_Layer: 5
-  m_Name: LeftScore
+  m_Name: Left Score
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1234,7 +1234,7 @@ GameObject:
   - component: {fileID: 1723675417}
   - component: {fileID: 1723675416}
   m_Layer: 5
-  m_Name: RightScore
+  m_Name: Right Score
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
