@@ -62,21 +62,21 @@ public class AIPlayer : MonoBehaviour
     {
         yield return new WaitForSeconds(3f);
         
-        //var playerParent = transform.parent;
+        var playerParent = transform.parent;
         
         //rb = parentObj.GetComponent<Rigidbody2D>();
         halfPlayerHeight = transform.localScale.y / 2f;
         //ball = GameObject.FindWithTag("Ball");
         ball = GameManager.Instance.activeBall;
         
-        //thisPaddle = playerParent.GetComponent<Paddle>();
+        thisPaddle = playerParent.GetComponent<Paddle>();
         
         // Disabling the Player script if present
-        /*Player playerScript = playerParent.GetComponent<Player>();
+        Player playerScript = playerParent.GetComponent<Player>();
         if(playerScript != null)
         {
             playerScript.enabled = false;
-        }*/
+        }
 
         letsPlay = true;
     }
