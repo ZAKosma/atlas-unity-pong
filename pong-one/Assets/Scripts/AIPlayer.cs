@@ -72,10 +72,10 @@ public class AIPlayer : MonoBehaviour
         thisPaddle = playerParent.GetComponent<Paddle>();
         
         // Disabling the Player script if present
-        Player player = playerParent.GetComponent<Player>();
-        if(player != null)
+        Player playerScript = playerParent.GetComponent<Player>();
+        if(playerScript != null)
         {
-            player.enabled = false;
+            playerScript.enabled = false;
         }
 
         letsPlay = true;
