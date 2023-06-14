@@ -60,19 +60,19 @@ public class AIPlayer : MonoBehaviour
 
     IEnumerator StartDelay()
     {
-        yield return 0;
+        yield return new WaitForSeconds(3f);
         
-        var parentObj = transform.parent;
+        var playerParent = transform.parent;
         
         //rb = parentObj.GetComponent<Rigidbody2D>();
         halfPlayerHeight = transform.localScale.y / 2f;
         //ball = GameObject.FindWithTag("Ball");
         ball = GameManager.Instance.activeBall;
         
-        thisPaddle = parentObj.GetComponent<Paddle>();
+        thisPaddle = playerParent.GetComponent<Paddle>();
         
         // Disabling the Player script if present
-        Player player = parentObj.GetComponent<Player>();
+        Player player = playerParent.GetComponent<Player>();
         if(player != null)
         {
             player.enabled = false;
