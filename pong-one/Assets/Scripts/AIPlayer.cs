@@ -10,47 +10,74 @@ public enum AILevel
     Hard
 }
 
-[RequireComponent(typeof(Paddle))]
 public class AIPlayer : MonoBehaviour
 {
     public float speed = 5f;
     public AILevel difficulty = AILevel.Easy;
 
-    private Rigidbody2D rb;
+    //private Rigidbody2D rb;
     private float halfPlayerHeight;
-    private GameObject ball;
+    private Ball ball;
     
     private Paddle thisPaddle;
 
+    private bool letsPlay;
+
     private void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-        halfPlayerHeight = transform.localScale.y / 2f;
-        ball = GameObject.FindWithTag("Ball");
-        
-        thisPaddle = GetComponent<Paddle>();
+        letsPlay = false;
+        StartCoroutine(StartDelay());
     }
 
     private void Update()
     {
-        Vector2 newPosition;
-        if (difficulty == AILevel.Easy)
+        if (letsPlay)
         {
-            //newPosition = rigidbody2D.position + Vector2.up * Mathf.Sign(ball.transform.position.y - transform.position.y) * speed * Time.fixedDeltaTime;
-            thisPaddle.Move(Math.Sign(ball.transform.position.y - transform.position.y) * speed * Time.fixedDeltaTime);
-            
-            //Change position based upon distance of the ball and likely trajectory
+            Vector2 newPosition;
+            if (difficulty == AILevel.Easy)
+            {
+                //newPosition = rigidbody2D.position + Vector2.up * Mathf.Sign(ball.transform.position.y - transform.position.y) * speed * Time.fixedDeltaTime;
+                thisPaddle.Move(Math.Sign(ball.transform.position.y - transform.position.y) * speed *
+                                Time.fixedDeltaTime);
+
+                //Change position based upon distance of the ball and likely trajectory
+            }
+            else if (difficulty == AILevel.Medium)
+            {
+                newPosition = thisPaddle.transform.position + Vector3.up * Mathf.Sign(ball.transform.position.y - transform.position.y) *
+                    speed * Time.fixedDeltaTime * 1.5f;
+            }
+            else
+            {
+                newPosition = thisPaddle.transform.position + Vector3.up * Mathf.Sign(ball.transform.position.y - transform.position.y) *
+                    speed * Time.fixedDeltaTime * 2f;
+            }
+
+            //newPosition.y = Mathf.Clamp(newPosition.y, -4.5f + halfPlayerHeight, 4.5f - halfPlayerHeight);
+            //rigidbody2D.MovePosition(newPosition);
         }
-        else if (difficulty == AILevel.Medium)
+    }
+
+    IEnumerator StartDelay()
+    {
+        yield return 0;
+        
+        var parentObj = transform.parent;
+        
+        //rb = parentObj.GetComponent<Rigidbody2D>();
+        halfPlayerHeight = transform.localScale.y / 2f;
+        //ball = GameObject.FindWithTag("Ball");
+        ball = GameManager.Instance.activeBall;
+        
+        thisPaddle = parentObj.GetComponent<Paddle>();
+        
+        // Disabling the Player script if present
+        Player player = parentObj.GetComponent<Player>();
+        if(player != null)
         {
-            newPosition = rb.position + Vector2.up * Mathf.Sign(ball.transform.position.y - transform.position.y) * speed * Time.fixedDeltaTime * 1.5f;
-        }
-        else
-        {
-            newPosition = rb.position + Vector2.up * Mathf.Sign(ball.transform.position.y - transform.position.y) * speed * Time.fixedDeltaTime * 2f;
+            player.enabled = false;
         }
 
-        //newPosition.y = Mathf.Clamp(newPosition.y, -4.5f + halfPlayerHeight, 4.5f - halfPlayerHeight);
-        //rigidbody2D.MovePosition(newPosition);
+        letsPlay = true;
     }
 }

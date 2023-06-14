@@ -13,7 +13,7 @@ public class Goal : MonoBehaviour
         collider = GetComponent<BoxCollider2D>();
         
         SetHeightBounds();
-        
+
         GameManager.Instance.SetGoalObj(this);
     }
 

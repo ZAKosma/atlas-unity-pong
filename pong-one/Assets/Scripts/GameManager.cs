@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject canvasParent;
 
-    private Ball activeBall;
+    public Ball activeBall;
     
     //Singleton Pattern
     public static GameManager Instance { get; private set; }
