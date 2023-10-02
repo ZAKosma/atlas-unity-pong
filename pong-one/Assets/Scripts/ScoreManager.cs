@@ -12,6 +12,8 @@ public class ScoreManager : MonoBehaviour
 
     public TMP_Text leftScoreText;
     public TMP_Text rightScoreText;
+    public GameObject victoryUI;
+    public TMP_Text victoryText;
     
     private void Awake() 
     { 
@@ -24,7 +26,7 @@ public class ScoreManager : MonoBehaviour
         else 
         { 
             Instance = this; 
-        } 
+        }
     }
     
     // Call this function when player 1 scores
@@ -62,13 +64,30 @@ public class ScoreManager : MonoBehaviour
         if (scorePlayer1 >= winningScore)
         {
             Debug.Log("Player 1 wins!");
+            victoryUI.gameObject.SetActive(true);
+
             // TODO: Implement what happens when Player 1 wins
+            victoryText.text = "PLAYER 1\nWINS";
         }
 
         if (scorePlayer2 >= winningScore)
         {
             Debug.Log("Player 2 wins!");
+            victoryUI.gameObject.SetActive(true);
+
+            victoryText.text = "PLAYER 2\nWINS"; 
             // TODO: Implement what happens when Player 2 wins
         }
+    }
+
+    public void ResetGame()
+    {
+        scorePlayer1 = 0;
+        scorePlayer2 = 0;
+
+        leftScoreText.text = "0";
+        rightScoreText.text = "0";
+        
+        victoryUI.gameObject.SetActive(false);
     }
 }

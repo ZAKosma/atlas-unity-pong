@@ -14,7 +14,7 @@ public class Ball : MonoBehaviour
 
     private bool ballActive;
     
-    private RectTransform rectTransform;
+    protected RectTransform rectTransform;
 
 
     private void Start()
@@ -23,7 +23,7 @@ public class Ball : MonoBehaviour
         
         SetHeightBounds();
 
-        direction = new Vector2(-1f, 0f);
+        direction = new Vector2(-1f, 0f).normalized;
     }
 
     private void Update()
@@ -33,25 +33,32 @@ public class Ball : MonoBehaviour
             return;
         }
         Vector2 newPosition = rectTransform.anchoredPosition + (direction * speed * Time.deltaTime);
-
+        
         rectTransform.anchoredPosition = newPosition;
 
+        
         if (rectTransform.anchoredPosition.y > screenTop || rectTransform.anchoredPosition.y < screenBottom)
         {
             direction.y *= -1f;
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    protected void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Paddle"))
         {
-            collision.gameObject.GetComponent<Paddle>().Reflect(this);
+            Paddle paddle = collision.gameObject.GetComponent<Paddle>();
+            
+            float y = BallHitPaddleWhere(GetPosition(), paddle.AnchorPos(), paddle.GetComponent<RectTransform>().sizeDelta.y / 2f);
+            Vector2 newDirection = new Vector2(paddle.isLeftPaddle ? 1f : -1f, y);
+            
+            Reflect(newDirection);
         }
         else if (collision.gameObject.CompareTag("Goal"))
         {
+            // Debug.Log("pos: " + rectTransform.anchoredPosition.x);
             //Left goal
-            if (this.rectTransform.position.x < -1)
+            if (this.rectTransform.anchoredPosition.x < -1)
             {
                 ScoreManager.Instance.ScorePointPlayer2();
             }
@@ -65,7 +72,7 @@ public class Ball : MonoBehaviour
 
     public void Reflect(Vector2 newDirection)
     {
-        direction = newDirection;
+        direction = newDirection.normalized;
     }
 
     public void SetBallActive(bool value)
@@ -84,5 +91,10 @@ public class Ball : MonoBehaviour
 
         screenTop = height / 2;
         screenBottom = -1 * height / 2;
+    }
+    
+    protected float BallHitPaddleWhere(Vector2 ball, Vector2 paddle, float paddleHeight)
+    {
+        return (ball.y - paddle.y) / paddleHeight;
     }
 }

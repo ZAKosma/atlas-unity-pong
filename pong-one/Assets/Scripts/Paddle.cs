@@ -8,8 +8,8 @@ public class Paddle : MonoBehaviour
     public bool isLeftPaddle = true;
     
     private float halfPlayerHeight;
-    private float screenTop = 527;
-    private float screenBottom = -527;
+    public float screenTop { get; private set; }
+    public float screenBottom { get; private set; }
 
     private float bounceDirection = 1f;
     
@@ -50,15 +50,22 @@ public class Paddle : MonoBehaviour
         rectTransform.anchoredPosition = newPosition;
     }
 
-    public void Reflect(Ball ball)
+    public float GetHalfHeight()
     {
-        float y = BallHitPaddleWhere(ball.GetPosition(), rectTransform.anchoredPosition, rectTransform.sizeDelta.y / 2f);
-        //Debug.Log("X: " + bounceDirection + " Y: " + y);
-        ball.Reflect(new Vector2(bounceDirection, y));
+        return halfPlayerHeight;
     }
 
-    private float BallHitPaddleWhere(Vector2 ball, Vector2 paddle, float paddleHeight)
+    public Vector2 AnchorPos()
     {
-        return (ball.y - paddle.y) / paddleHeight;
+        return rectTransform.anchoredPosition;
     }
+
+    // public void Reflect(Ball ball)
+    // {
+    //     float y = BallHitPaddleWhere(ball.GetPosition(), rectTransform.anchoredPosition, rectTransform.sizeDelta.y / 2f);
+    //     //Debug.Log("X: " + bounceDirection + " Y: " + y);
+    //     ball.Reflect(new Vector2(bounceDirection, y));
+    // }
+
+
 }

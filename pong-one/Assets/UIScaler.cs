@@ -13,7 +13,7 @@ public class UIScaler : MonoBehaviour
 
     private float windowHeight;
     
-    private void Start()
+    private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
         windowHeight = rectTransform.rect.height;

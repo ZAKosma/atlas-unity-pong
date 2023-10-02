@@ -1,26 +1,14 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    //Game variables
     [SerializeField] private float startDelay = 3f;
-    // private int leftScore = 0;
-    // private int rightScore = 0;
-    // [SerializeField]
-    // private int scoreToWin = 11;
-    
-    //Set Up variables
-    [SerializeField]
-    private GameObject ballPrefab;
-
+    [SerializeField] private GameObject ballPrefab;
     [SerializeField] private GameObject canvasParent;
 
     public Ball activeBall;
-    
-    //Singleton Pattern
+
     public static GameManager Instance { get; private set; }
 
     private Goal[] goals;
@@ -41,11 +29,12 @@ public class GameManager : MonoBehaviour
 
     void SetGame()
     {
-        // leftScore = 0;
-        // rightScore = 0;
+        if (activeBall == null)
+        {
+            activeBall = Instantiate(ballPrefab, Vector3.zero, this.transform.rotation, canvasParent.transform).GetComponent<Ball>();
+            activeBall.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+        }
         
-        activeBall = Instantiate(ballPrefab, Vector3.zero, this.transform.rotation, canvasParent.transform).GetComponent<Ball>();
-        activeBall.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
         activeBall.SetBallActive(false);
     }
 
@@ -55,9 +44,14 @@ public class GameManager : MonoBehaviour
         activeBall.SetBallActive(true);
     }
 
-    private void Start()
+    public void Reset()
     {
         StartCoroutine(StartTimer());
+    }
+
+    private void Start()
+    {
+        Reset();
     }
 
     IEnumerator StartTimer()
@@ -72,7 +66,6 @@ public class GameManager : MonoBehaviour
 
     void SetBounds()
     {
-        
         activeBall.SetHeightBounds();
         foreach (var g in goals)
         {
@@ -82,14 +75,15 @@ public class GameManager : MonoBehaviour
 
     public void ResetBall()
     {
-        //Debug.Log("Restting");
         StartCoroutine(ResetBallCoroutine());
     }    
     private IEnumerator ResetBallCoroutine()
     {
-        GameObject.Destroy(activeBall.gameObject);
+        // Simply reset the ball's position and state instead of destroying it
+        activeBall.transform.position = Vector3.zero;
+        activeBall.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+        activeBall.SetBallActive(false);
         
-        //wait till next frame for ball to destroy
         yield return null;
         
         StartCoroutine(StartTimer());
