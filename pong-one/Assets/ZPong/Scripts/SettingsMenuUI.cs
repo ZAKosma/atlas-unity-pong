@@ -51,12 +51,12 @@ namespace ZPong
         private const int dBallSpeed = 500;
         private const int dBallSize = 25;
         private const int dScoreToWin = 10;
-        private const int dAILevel = 1;
+        private const int dAILevel = 0;
         private const KeyCode dPlayerOneUp = KeyCode.W;
         private const KeyCode dPlayerOneDown = KeyCode.S;
         private const KeyCode dPlayerTwoUp = KeyCode.UpArrow;
         private const KeyCode dPlayerTwoDown = KeyCode.DownArrow;
-        private const string pitchDirection = "Random";
+        private const string pitchDirection = "Left";
 
         [SerializeField] private Color nonSelectedNormalColor = Color.gray;
         [SerializeField] private Color nonSelectedHighlightedColor = Color.gray;
@@ -69,14 +69,13 @@ namespace ZPong
             scoreToWinSlider.onValueChanged.AddListener(UpdateScoreToWin);
             ballSpeedSlider.onValueChanged.AddListener(UpdateBallSpeed);
             ballSizeSlider.onValueChanged.AddListener(UpdateBallSize);
-            paddleSizeSlider.onValueChanged.AddListener(UpdatePaddleSpeed);
-            paddleSpeedSlider.onValueChanged.AddListener(UpdatePaddleSize);
+            paddleSizeSlider.onValueChanged.AddListener(UpdatePaddleSize);
+            paddleSpeedSlider.onValueChanged.AddListener(UpdatePaddleSpeed);
 
             // Attach onClick listeners for AI Level and Pitch Direction buttons.
-            for (var index = 0; index <= 2; index++)
-            {
-                aiLevelButtons[index].onClick.AddListener(() => SetAILevel(index + 1));
-            }
+            aiLevelButtons[0].onClick.AddListener(() => SetAILevel(0));
+            aiLevelButtons[1].onClick.AddListener(() => SetAILevel(1));
+            aiLevelButtons[2].onClick.AddListener(() => SetAILevel(2));
 
             foreach (var pitchButton in pitchDirectionButtons)
             {
@@ -91,6 +90,7 @@ namespace ZPong
                 playerUpInputButtons[i].onClick.AddListener(() => ConfigurePlayerInput(playerIndex, true));
                 playerDownInputButtons[i].onClick.AddListener(() => ConfigurePlayerInput(playerIndex, false));
             }
+            
         }
 
         private void OnEnable()
@@ -168,9 +168,9 @@ namespace ZPong
             // Store the selected AI level in PlayerPrefs.
             PlayerPrefs.SetInt("AILevel", level);
 
-            // Highlight the selected button and deselect others (you'll need to implement this logic).
-            UpdateButtonColors();
-            menuPaddleLeft.GetComponent<AIPlayer>().difficulty = (AILevel) level;
+            // Highlight the selected AI Level button and deselect others.
+            UpdateButtonColors(aiLevelButtons, level);
+            leftAI.difficulty = (AILevel)level;
         }
 
 
@@ -179,8 +179,8 @@ namespace ZPong
             // Store the selected pitch direction in PlayerPrefs.
             PlayerPrefs.SetString("PitchDirection", direction);
 
-            // Highlight the selected button and deselect others (you'll need to implement this logic).
-            UpdateButtonColors();
+            // Highlight the selected Pitch Direction button and deselect others.
+            UpdateButtonColors(pitchDirectionButtons, Array.FindIndex(pitchDirectionButtons, button => button.name == direction));
         }
 
         private void ConfigurePlayerInput(int playerIndex, bool isUpInput)
@@ -195,34 +195,16 @@ namespace ZPong
                 playerDownInputTexts[playerIndexToConfigure].text = "...";
         }
 
-        private void UpdateButtonColors()
+        private void UpdateButtonColors(Button[] buttonsToColor, int selectedIndex)
         {
-            // Get the selected AI Level and Pitch Direction from PlayerPrefs.
-            string selectedAILevel = PlayerPrefs.GetString("AILevel");
-            string selectedPitchDirection = PlayerPrefs.GetString("PitchDirection");
-
-            foreach (var aiButton in aiLevelButtons)
+            // Iterate through the provided buttons and update their colors based on the selected index.
+            for (int index = 0; index < buttonsToColor.Length; index++)
             {
-                // Check if the button name matches the selected AI Level.
-                bool isSelected = aiButton.name == selectedAILevel;
-
-                // Set the button colors based on whether it's selected or not.
-                ColorBlock colors = aiButton.colors;
+                bool isSelected = (index == selectedIndex);
+                ColorBlock colors = buttonsToColor[index].colors;
                 colors.normalColor = isSelected ? Color.white : nonSelectedNormalColor;
                 colors.highlightedColor = isSelected ? Color.white : nonSelectedHighlightedColor;
-                aiButton.colors = colors;
-            }
-
-            foreach (var pitchButton in pitchDirectionButtons)
-            {
-                // Check if the button name matches the selected Pitch Direction.
-                bool isSelected = pitchButton.name == selectedPitchDirection;
-
-                // Set the button colors based on whether it's selected or not.
-                ColorBlock colors = pitchButton.colors;
-                colors.normalColor = isSelected ? Color.white : nonSelectedNormalColor;
-                colors.highlightedColor = isSelected ? Color.white : nonSelectedHighlightedColor;
-                pitchButton.colors = colors;
+                buttonsToColor[index].colors = colors;
             }
         }
 
@@ -235,7 +217,7 @@ namespace ZPong
             // Initialize Score to Win setting.
             if (PlayerPrefs.HasKey("ScoreToWin"))
             {
-                float scoreToWinValue = PlayerPrefs.GetFloat("ScoreToWin");
+                int scoreToWinValue = PlayerPrefs.GetInt("ScoreToWin");
                 scoreToWinSlider.value = scoreToWinValue;
                 scoreToWinText.text = scoreToWinValue.ToString();
             }
@@ -276,18 +258,15 @@ namespace ZPong
             if (PlayerPrefs.HasKey("AILevel"))
             { 
                 int aiLevelValue = PlayerPrefs.GetInt("AILevel");
-                // You'll need to implement logic to highlight the correct AI level button herse.
+                SetAILevel(aiLevelValue); // Call the SetAILevel method to highlight the correct button.
             }
 
             // Initialize Pitch Direction setting.
             if (PlayerPrefs.HasKey("PitchDirection"))
             {
                 string pitchDirectionValue = PlayerPrefs.GetString("PitchDirection");
-                // You'll need to implement logic to highlight the correct Pitch Direction button here.
+                SetPitchDirection(pitchDirectionValue); // Call the SetPitchDirection method to highlight the correct button.
             }
-
-            //After we update the AI level and pitch update the buttons
-            UpdateButtonColors();
 
             // Initialize Player Input settings.
             for (int i = 0; i < 2; i++)
@@ -350,6 +329,7 @@ namespace ZPong
             }
         }
 
+        [ContextMenu("Reset To Default Settings")]
         private void ResetToDefaultSettings()
         {
             // Reset Score to Win to default.
@@ -373,12 +353,10 @@ namespace ZPong
             UpdatePaddleSize(dPaddleSize);
 
             // Reset AI Level to default.
-            PlayerPrefs.SetInt("AILevel", dAILevel);
-            UpdateButtonColors(); // Update button colors to reflect the default AI Level.
+            SetAILevel(dAILevel);
 
             // Reset Pitch Direction to default.
-            PlayerPrefs.SetString("PitchDirection", pitchDirection);
-            UpdateButtonColors(); // Update button colors to reflect the default Pitch Direction.
+            SetPitchDirection(pitchDirection);
 
             // Reset Player Input settings to default.
             for (int i = 0; i < 2; i++)
