@@ -7,13 +7,13 @@ namespace ZPong
 
     public class Goal : MonoBehaviour
     {
-        private BoxCollider2D collider;
+        private BoxCollider2D myCollider;
 
 
         // Start is called before the first frame update
         void Start()
         {
-            collider = GetComponent<BoxCollider2D>();
+            myCollider = GetComponent<BoxCollider2D>();
 
             SetHeightBounds();
 
@@ -22,7 +22,7 @@ namespace ZPong
 
         public void SetHeightBounds()
         {
-            collider.size = new Vector2(collider.size.x, UIScaler.Instance.GetUIHeight());
+            myCollider.size = new Vector2(myCollider.size.x, UIScaler.Instance.GetUIHeight());
         }
     }
 

@@ -44,7 +44,7 @@ namespace ZPong
 
         void StartGame()
         {
-            Debug.Log("Starting game!");
+            //Debug.Log("Starting game!");
             activeBall.SetBallActive(true);
         }
 

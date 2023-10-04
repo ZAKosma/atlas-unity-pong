@@ -19,6 +19,8 @@ namespace ZPong
 
         protected RectTransform rectTransform;
 
+        private AudioSource bounceSFX;
+
 
         private void Start()
         {
@@ -65,23 +67,26 @@ namespace ZPong
             defaultDirection = direction;
 
             SetHeightBounds();
+
+            bounceSFX = this.GetComponent<AudioSource>();
         }
 
         private void Update()
         {
-            if (!ballActive)
+            if (ballActive)
             {
-                return;
-            }
-
-            Vector2 newPosition = rectTransform.anchoredPosition + (direction * speed * Time.deltaTime);
-
-            rectTransform.anchoredPosition = newPosition;
 
 
-            if (rectTransform.anchoredPosition.y > screenTop || rectTransform.anchoredPosition.y < screenBottom)
-            {
-                direction.y *= -1f;
+                Vector2 newPosition = rectTransform.anchoredPosition + (direction * speed * Time.deltaTime);
+
+                rectTransform.anchoredPosition = newPosition;
+
+
+                if (rectTransform.anchoredPosition.y > screenTop || rectTransform.anchoredPosition.y < screenBottom)
+                {
+                    direction.y *= -1f;
+                    PlayBounceSound();
+                }
             }
         }
 
@@ -96,6 +101,7 @@ namespace ZPong
                 Vector2 newDirection = new Vector2(paddle.isLeftPaddle ? 1f : -1f, y);
 
                 Reflect(newDirection);
+                PlayBounceSound();
             }
             else if (collision.gameObject.CompareTag("Goal"))
             {
@@ -141,5 +147,17 @@ namespace ZPong
         {
             return (ball.y - paddle.y) / paddleHeight;
         }
+
+        void PlayBounceSound()
+        {
+            bounceSFX.pitch = Random.Range(.8f, 1.2f);
+            bounceSFX.Play();
+        }
+        
+        public void DisableBall()
+        {
+            ballActive = false;
+        }
+
     }
 }

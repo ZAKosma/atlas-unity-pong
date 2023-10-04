@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.Design.Serialization;
 using TMPro;
 using UnityEngine;
@@ -33,6 +34,11 @@ namespace ZPong
             }
         }
 
+        private void Start()
+        {
+            winningScore = PlayerPrefs.GetInt("ScoreToWin");
+        }
+
         // Call this function when player 1 scores
         public void ScorePointPlayer1()
         {
@@ -57,31 +63,44 @@ namespace ZPong
 
         private void PostScore()
         {
-            GameManager.Instance.ResetBall();
-            CheckWinCondition();
-
+            if (CheckWinCondition())
+            {
+                GameManager.Instance.ResetBall();
+            }
         }
 
         // Check if either player has reached the winning score
-        private void CheckWinCondition()
+        //Returns true if the game can continue
+        //Returns false if a player won
+        private bool CheckWinCondition()
         {
+            bool output = true; 
+            
             if (scorePlayer1 >= winningScore)
             {
                 Debug.Log("Player 1 wins!");
                 victoryUI.gameObject.SetActive(true);
+                VictoryMusicManager.Instance.PlayVictoryMusic();
 
-                // TODO: Implement what happens when Player 1 wins
+                GameManager.Instance.activeBall.DisableBall();
+
                 victoryText.text = "PLAYER 1\nWINS";
+                
+                output = false;
             }
-
-            if (scorePlayer2 >= winningScore)
+            else if (scorePlayer2 >= winningScore)
             {
                 Debug.Log("Player 2 wins!");
                 victoryUI.gameObject.SetActive(true);
+                VictoryMusicManager.Instance.PlayVictoryMusic();
+
+                GameManager.Instance.activeBall.DisableBall();
 
                 victoryText.text = "PLAYER 2\nWINS";
-                // TODO: Implement what happens when Player 2 wins
+                output = false;
             }
+
+            return output;
         }
 
         public void ResetGame()

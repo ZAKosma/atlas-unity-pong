@@ -13,9 +13,7 @@ namespace ZPong
         private float halfPlayerHeight;
         public float screenTop { get; private set; }
         public float screenBottom { get; private set; }
-
-        private float bounceDirection = 1f;
-
+        
         private RectTransform rectTransform;
 
 
@@ -27,6 +25,7 @@ namespace ZPong
             if (PlayerPrefs.HasKey("PaddleSize"))
             {
                 rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, PlayerPrefs.GetFloat("PaddleSize"));
+                this.GetComponent<BoxCollider2D>().size = rectTransform.sizeDelta;
             }
 
             halfPlayerHeight = rectTransform.sizeDelta.y / 2f;
@@ -35,15 +34,6 @@ namespace ZPong
 
             screenTop = height / 2;
             screenBottom = -1 * height / 2;
-
-            if (isLeftPaddle)
-            {
-                bounceDirection = 1f;
-            }
-            else
-            {
-                bounceDirection = -1f;
-            }
         }
 
         public void Move(float movement)

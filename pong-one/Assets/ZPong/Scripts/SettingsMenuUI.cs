@@ -158,8 +158,11 @@ namespace ZPong
             // Update any visual representation of the ball size (if needed).
             var paddle = menuPaddleLeft.GetComponent<RectTransform>();
             paddle.sizeDelta = new Vector2(paddle.sizeDelta.x, value);
+            paddle.GetComponent<BoxCollider2D>().size = paddle.sizeDelta;
             paddle = menuPaddleRight.GetComponent<RectTransform>();
             paddle.sizeDelta = new Vector2(paddle.sizeDelta.x, value);
+            paddle.GetComponent<BoxCollider2D>().size = paddle.sizeDelta;
+
         }
 
 
