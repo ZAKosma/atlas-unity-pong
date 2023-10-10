@@ -82,7 +82,7 @@ namespace ZPong
                 rectTransform.anchoredPosition = newPosition;
 
 
-                if (rectTransform.anchoredPosition.y > screenTop || rectTransform.anchoredPosition.y < screenBottom)
+                if (rectTransform.anchoredPosition.y >= screenTop || rectTransform.anchoredPosition.y <= screenBottom)
                 {
                     direction.y *= -1f;
                     PlayBounceSound();

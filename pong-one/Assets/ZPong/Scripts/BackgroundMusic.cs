@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
@@ -7,7 +8,9 @@ using Random = UnityEngine.Random;
 public class BackgroundMusic : MonoBehaviour
 {
     public static BackgroundMusic Instance;
-    
+
+    [SerializeField] private AudioMixer audioMixer; // Reference to your Audio Mixer.
+
     public AudioClip[] musicTracks;  // List of audio clips for background music
     private AudioSource audioSource;
     private int currentTrackIndex;
@@ -39,6 +42,23 @@ public class BackgroundMusic : MonoBehaviour
         
         // Subscribe to the scene loaded event to change tracks when a new scene is loaded
         SceneManager.sceneLoaded += OnSceneLoaded;
+        
+        
+        //Tune volume at the beginning
+        float normalizedValue = Mathf.Pow(PlayerPrefs.GetFloat("MasterVolume") / 100.0f, 0.33f);
+        float mappedValue = Mathf.Lerp(-80, 0, normalizedValue);
+
+        audioMixer.SetFloat("Master", Mathf.Log10(Mathf.Max(0.001f, Mathf.Pow(10, mappedValue / 20))) * 20);
+            
+        normalizedValue = Mathf.Pow(PlayerPrefs.GetFloat("MusicVolume") / 100.0f, 0.33f);
+        mappedValue = Mathf.Lerp(-80, 0, normalizedValue);
+        
+        audioMixer.SetFloat("Music", Mathf.Log10(Mathf.Max(0.001f, Mathf.Pow(10, mappedValue / 20))) * 20);
+
+        normalizedValue = Mathf.Pow(PlayerPrefs.GetFloat("SFXVolume") / 100.0f, 0.33f);
+        mappedValue = Mathf.Lerp(-80, 0, normalizedValue);
+        
+        audioMixer.SetFloat("SFX", Mathf.Log10(Mathf.Max(0.001f, Mathf.Pow(10, mappedValue / 20))) * 20);
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)

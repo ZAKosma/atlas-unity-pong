@@ -6,6 +6,7 @@ using UnityEngine.UI;
 namespace ZPong
 {
 
+    [RequireComponent(typeof(VolumeControl))]
     public class SettingsMenuUI : MonoBehaviour
     {
         private MenuBall menuBall;
@@ -45,6 +46,8 @@ namespace ZPong
         private KeyCode[] playerUpInputs = new KeyCode[2]; // Stores player up inputs for two players.
         private KeyCode[] playerDownInputs = new KeyCode[2]; // Stores player down inputs for two players.
 
+        private VolumeControl volumeSettingsController;
+        
         //Default values
         private const int dPaddleSize = 200;
         private const int dPaddleSpeed = 500;
@@ -90,7 +93,8 @@ namespace ZPong
                 playerUpInputButtons[i].onClick.AddListener(() => ConfigurePlayerInput(playerIndex, true));
                 playerDownInputButtons[i].onClick.AddListener(() => ConfigurePlayerInput(playerIndex, false));
             }
-            
+
+            volumeSettingsController = this.GetComponent<VolumeControl>();
         }
 
         private void OnEnable()
@@ -371,6 +375,9 @@ namespace ZPong
                 playerUpInputTexts[i].text = GetFormattedInputKey(GetDefaultPlayerUpInput(i));
                 playerDownInputTexts[i].text = GetFormattedInputKey(GetDefaultPlayerDownInput(i));
             }
+            
+            //Reset volume controls
+            volumeSettingsController.ResetToDefaultSettings();
         }
 
         // Define default player up input keys.
